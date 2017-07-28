@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block nav-title %}申请列表{% endblock %}
+
+{% block main_container %}
+
+    {% if fund_list %}
+        {% for fund in fund_list %}
+            <div class="row">
+                <div class="col s12 m6 offset-m3">
+                  <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">{{ fund.name }}
+                            <div class="right">
+                                {% if fund.teacher_approve %}
+                                    {% if fund.is_objected %}
+                                    <a class="waves-effect red waves-light btn" href="">已否决</a>
+                                    {% elif fund.is_viewed_by_student %}
+                                    <a class="waves-effect green waves-light btn" href="">已批准</a>
+                                    {% else %}
+                                    {% block btn_or_res %}
+                                    <a class="waves-effect green waves-light btn" href="/fund/{{ fund.id }}/approve">批准</a>
+                                    <a class="waves-effect red waves-light btn" href="/fund/{{ fund.id }}/deny">否决</a>
+                                    {% endblock %}
+                                    {% endif %}
+                                {% else %}
+                                    {% if fund.is_objected %}
+                                    <a class="waves-effect red waves-light btn" href="">已否决</a>
+                                    {% elif fund.is_viewed_by_teacher %}
+                                    <a class="waves-effect green waves-light btn" href="">已批准</a>
+                                    {% else %}
+                                    <a class="waves-effect green waves-light btn" href="/fund/{{ fund.id }}/approve">批准</a>
+                                    <a class="waves-effect red waves-light btn" href="/fund/{{ fund.id }}/deny">否决</a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </span>
+                        <p>申请时间：{{ fund.apply_date }}</p>
+                        <p>申请者：{{ fund.charger }}</p>
+                        <p>当前状态：{{ fund.fund_status }}</p>
+
+                    </div>
+                    <div class="card-action">
+                        <a class="teal-text" href="/upload/{{ fund.plan_file }}">下载附件</a>
+                        <a class="teal-text" href="/fund/{{ fund.id }}/">详情</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        {% endfor %}
+        <div class="pagination_container" style="text-align: center;">
+            <ul class="pagination" style="display:inline-block">
+            {% if fund_list.has_previous %}
+                <li class="waves-effect" title='上一页' ><a href='?page={{ fund_list.previous_page_number }}'>上一页</a></li>
+            {% else %}
+                <li class="disabled"><a href="#!">上一页</a></li>
+            {% endif %}
+            {% for page in fund_list.paginator.page_range %}
+                {% if page == fund_list.number %}
+                    <li class="active teal" title='当前页:{{ page }}'><a href="#!">{{ page }}</a></li>
+                {% else %}
+                    <li class="waves-effect"><a href='?page={{ page }}'>{{ page }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if fund_list.has_next %}
+                <li class="waves-effect" title='下一页'><a href='?page={{ fund_list.next_page_number }}'>下一页</a></li>
+            {% else %}
+                <li class="disabled"><a href="#!">下一页</a></li>
+            {% endif %}
+            </ul>
+        </div>
+    {% else %}
+        <div class="row">
+          <div class="col s12 m6 offset-m3">
+            <div class="card-panel pink darken-1">
+              <span class="white-text">当前没有申请!</span>
+            </div>
+          </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block nav-title %}申请详情{% endblock %}
+
+
+{% block main_container %}
+    <div class="row">
+        <div class="col s12">
+            <div class="card-panel">
+                <div class="card-content">
+                    <a href="/fund/" class="grey-text">申请列表</a>
+                    <span> > </span>
+                    <a href="/fund/{{ fund.id }}/">详情</a>
+                    <div class="right">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">活动名称：{{ fund.name }}</span>
+                    <div class="container">
+                        <table>
+                            <tr>
+                              <td>当前状态:{{ fund_stat }}</td>
+                              <td>活动时间：{{ fund.activity_date }}</td>
+                            </tr>
+                            <tr>
+                                <td>策划书：<a href="/upload/{{ fund.plan_file }}">点击下载</a></td>
+                                <td>持续时间：{{ fund.last_time }}</td>
+                            </tr>
+                            <tr>
+                                <td>负责人：{{ fund.charger }}</td>
+                                <td>负责人联系方式：{{ fund.charger_tel }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">活动成员：{{ fund.activity_member }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">备注：{{ fund.note }}</td>
+                            </tr>
+                        </table>
+                        <br> </br>
+                        <div class="row">
+                            {% if fund.teacher_approve %}
+                                    {% if fund.is_objected %}
+                                    <a class="waves-effect red waves-light btn" href="">已否决</a>
+                                    {% elif fund.is_viewed_by_student %}
+                                    <a class="waves-effect green waves-light btn" href="">已批准</a>
+                                    {% else %}
+                                    {% block btn_or_res %}
+                                    <a class="waves-effect green waves-light btn" href="/fund/{{ fund.id }}/approve">批准</a>
+                                    <a class="waves-effect red waves-light btn" href="/fund/{{ fund.id }}/deny">否决</a>
+                                    {% endblock %}
+                                    {% endif %}
+                                {% else %}
+                                    {% if fund.is_objected %}
+                                    <a class="waves-effect red waves-light btn" href="">已否决</a>
+                                    {% elif fund.is_viewed_by_teacher %}
+                                    <a class="waves-effect green waves-light btn" href="">已批准</a>
+                                    {% else %}
+                                    <a class="waves-effect green waves-light btn" href="/fund/{{ fund.id }}/approve">批准</a>
+                                    <a class="waves-effect red waves-light btn" href="/fund/{{ fund.id }}/deny">否决</a>
+                                    {% endif %}
+                                {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
